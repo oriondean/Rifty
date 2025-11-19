@@ -100,6 +100,9 @@ npm run preview
 - **PG** - Proving Grounds  
 - **SFD** - Shattered Fates
 
+## Known Issues
+
+- **Bulk Add with Alternate Art Cards**: The bulk add feature currently does not properly distinguish between standard and alternate art cards when using the 'a' suffix. Entering `7a` may add both the standard and alternate versions instead of just the alternate version. As a workaround, use the individual card hover buttons to add alternate art cards.
 
 ## License
 
