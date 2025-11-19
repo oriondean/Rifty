@@ -1,73 +1,112 @@
-# React + TypeScript + Vite
+# Rifty - Riftbound Card Collection Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, feature-rich web application for managing your Riftbound card collection with a premium fantasy-themed UI.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This application was created using a combination of:
+- **Claude 4.5 Sonnet** (Anthropic)
+- **Gemini 3** (Google)
 
-## React Compiler
+Built with **Google Antigravity** - an advanced AI-powered development platform.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+### Collection Management
+- **Visual Card Grid**: Browse all cards organized by set (Origins, Proving Grounds, Shattered Fates)
+- **Ownership Tracking**: Track how many copies of each card you own
+- **Quick Add/Remove**: Hover over cards to quickly add or remove copies with intuitive +/- buttons
+- **Bulk Add**: Efficiently add multiple cards at once using collector numbers
+  - Support for alternate art cards using 'a' suffix (e.g., `7a` for alternate Fury Rune)
+  - Set-specific filtering (OGN, PG, SFD)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Filtering & Search
+- **Advanced Search**: Full-text search across card names and descriptions
+- **Multi-Filter System**: Filter by rarity, element, and card type
+- **Real-time Updates**: Instant filtering as you type or change selections
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Set Statistics
+Each set displays comprehensive collection statistics:
+- **Owned**: Number of unique cards owned vs. total cards in set
+- **With Duplicates**: Count of cards you have multiple copies of
+- **Completion**: Percentage of set completion (turns green at 100%)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Visual Enhancements
+- **Rarity Indicators**: Color-coded dots on each card showing rarity at a glance
+  - Common: Grey
+  - Uncommon: Green
+  - Rare: Blue
+  - Epic: Purple
+  - Showcase: Purple-Pink gradient
+- **Hover Animations**: Smooth scale and lift effects on card hover
+- **Card Previews**: Large card image preview on hover
+- **Responsive Design**: Optimized for both desktop and mobile devices
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Data Persistence
+- **Local Storage**: Your collection is automatically saved to browser local storage
+- **Instant Sync**: Changes are saved immediately as you add or remove cards
+
+## Technology Stack
+
+- **React 18** with TypeScript
+- **Vite** for fast development and optimized builds
+- **Tailwind CSS** for styling
+- **Lucide React** for icons
+- **Local Storage API** for data persistence
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Usage
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Adding Cards
+1. **Individual Cards**: Hover over any card and click the green `+` button
+2. **Bulk Add**: 
+   - Select a set from the dropdown (OGN, PG, SFD)
+   - Enter collector numbers separated by spaces (e.g., `1 5 12 7a`)
+   - Use 'a' suffix for alternate art cards (e.g., `7a` for Fury Rune Alternate)
+   - Press Enter or click the `+` button
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Removing Cards
+- Hover over a card and click the red `-` button to remove one copy
+
+### Filtering
+- Use the search bar to find specific cards
+- Select filters for Rarity, Element, or Card Type
+- Filters can be combined for precise results
+
+## Card Sets
+
+- **OGN** - Origins
+- **PG** - Proving Grounds  
+- **SFD** - Shattered Fates
+
+
+## License
+
+This is a fan-made tool for the Riftbound card game. All card data and imagery are property of their respective owners.
+
+## Acknowledgments
+
+- Riftbound card game by Riot Games
+- Card data sourced from official Riftbound API
+- UI/UX inspired by modern card collection management tools
