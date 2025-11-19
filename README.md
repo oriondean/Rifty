@@ -111,5 +111,5 @@ This is a fan-made tool for the Riftbound card game. All card data and imagery a
 ## Acknowledgments
 
 - Riftbound card game by Riot Games
-- Card data sourced from official Riftbound API
+- Card data (`origins-set.json`) sourced from [OwenMelbz's GitHub Gist](https://gist.github.com/OwenMelbz/e04dadf641cc9b81cb882b4612343112)
 - UI/UX inspired by modern card collection management tools
