@@ -3,7 +3,7 @@
 @config "../tailwind.config.js";
 
 body {
-  @apply bg-rift-900 text-rift-100 font-sans;
+  @apply bg-lol-950 text-lol-100 font-sans;
 }
 
 h1,
@@ -13,4 +13,16 @@ h4,
 h5,
 h6 {
   @apply font-fantasy;
+}
+
+/* League of Legends angular clip corners */
+.clip-corners {
+  clip-path: polygon(0 8px,
+      8px 0,
+      calc(100% - 8px) 0,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      0 calc(100% - 8px));
 }
