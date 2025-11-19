@@ -5,7 +5,7 @@ import { BulkAddControl } from './components/BulkAddControl';
 import { Sparkles } from 'lucide-react';
 
 function App() {
-  const { allUserCards, filters, sort, updateFilter, updateSort, addCard, addCards, removeCard } = useCollection();
+  const { allUserCards, filters, updateFilter, addCard, addCards, removeCard } = useCollection();
 
   return (
     <div className="min-h-screen bg-rift-900 text-rift-100 font-sans selection:bg-rift-500 selection:text-white">
