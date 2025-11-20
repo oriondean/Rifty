@@ -4,6 +4,7 @@ import { Textarea } from './ui/textarea';
 import { Plus } from 'lucide-react';
 import { getCardsByNumberAndType } from '../utils/cardAdapter';
 import type { Card } from '../data/Card';
+import { NOTIFICATION_DURATION } from '../constants';
 import {
     Select,
     SelectContent,
@@ -26,7 +27,7 @@ export const BulkAddControl: React.FC<BulkAddControlProps> = ({ onAddBulk }) => 
         const inputs = bulkInput.split(/\s+/).filter(s => s.trim());
         if (inputs.length === 0) {
             setShowError(true);
-            setTimeout(() => setShowError(false), 3000);
+            setTimeout(() => setShowError(false), NOTIFICATION_DURATION);
             return;
         }
 
@@ -55,10 +56,10 @@ export const BulkAddControl: React.FC<BulkAddControlProps> = ({ onAddBulk }) => 
             onAddBulk(cardsToAdd);
             setStatus(`Added ${addedCount}`);
             setBulkInput('');
-            setTimeout(() => setStatus(''), 3000);
+            setTimeout(() => setStatus(''), NOTIFICATION_DURATION);
         } else {
             setStatus('No matches');
-            setTimeout(() => setStatus(''), 3000);
+            setTimeout(() => setStatus(''), NOTIFICATION_DURATION);
         }
     };
 

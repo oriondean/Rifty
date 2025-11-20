@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { Card, Rarity, Element, CardType } from '../data/Card';
+import { STORAGE_KEY, RARITY_ORDER } from '../constants';
 
 export type SortField = 'name' | 'power' | 'cost' | 'rarity';
 export type SortDirection = 'asc' | 'desc';
@@ -11,18 +12,30 @@ export interface FilterState {
     type: CardType | 'All';
 }
 
-const STORAGE_KEY = 'rifty-collection';
-
+/**
+ * Custom hook for managing card collection with persistence
+ */
 export const useCollection = () => {
-    // Initialize from LocalStorage or empty array
+    // Initialize from LocalStorage or empty array with error handling
     const [cards, setCards] = useState<Card[]>(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            return saved ? JSON.parse(saved) : [];
+        } catch (error) {
+            console.error('Failed to load collection from localStorage:', error);
+            return [];
+        }
     });
 
-    // Persist to LocalStorage whenever cards change
+
+    // Persist to LocalStorage whenever cards change with error handling
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+        } catch (error) {
+            console.error('Failed to save collection to localStorage:', error);
+            // Could show user notification here in future
+        }
     }, [cards]);
 
     const [filters, setFilters] = useState<FilterState>({
@@ -52,8 +65,7 @@ export const useCollection = () => {
         return [...filteredCards].sort((a, b) => {
             let comparison = 0;
             if (sort.field === 'rarity') {
-                const rarityOrder: Record<string, number> = { Common: 1, Uncommon: 2, Rare: 3, Epic: 4, Legendary: 5, Mythic: 6, Showcase: 7 };
-                comparison = rarityOrder[a.rarity] - rarityOrder[b.rarity];
+                comparison = RARITY_ORDER[a.rarity] - RARITY_ORDER[b.rarity];
             } else if (typeof a[sort.field] === 'string') {
                 comparison = (a[sort.field] as string).localeCompare(b[sort.field] as string);
             } else {

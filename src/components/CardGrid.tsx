@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { CompactCard } from './CompactCard';
 import type { Card as CardType } from '../data/Card';
-import { getAllCards } from '../utils/cardAdapter';
+import { useCardData } from '../contexts/CardDataContext';
 import type { FilterState } from '../hooks/useCollection';
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { EXCLUDED_SETS, SET_ORDER, RARITY_COLORS } from '../constants';
 
 interface CardGridProps {
     userCards: CardType[]; // Unfiltered user collection for ownership counts
@@ -14,12 +15,12 @@ interface CardGridProps {
 }
 
 export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCard, onRemoveCard }) => {
-    const allCards = useMemo(() => getAllCards(), []);
+    const allCards = useCardData();
 
     // Filter all cards based on current filters
     const filteredAllCards = useMemo(() => {
         return allCards.filter((card) => {
-            if (card.set === 'SFD') return false;
+            if (EXCLUDED_SETS.includes(card.set as typeof EXCLUDED_SETS[number])) return false;
             const matchesSearch = card.name.toLowerCase().includes(filters.search.toLowerCase()) ||
                 card.description.toLowerCase().includes(filters.search.toLowerCase());
             const matchesRarity = filters.rarity === 'All' || card.rarity === filters.rarity;
@@ -59,9 +60,8 @@ export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCar
 
         // Enforce Set Order: OGN -> PG -> SFD
         const orderedGroups = new Map<string, { name: string, cards: CardType[] }>();
-        const order = ['OGN', 'PG', 'SFD'];
 
-        order.forEach(code => {
+        SET_ORDER.forEach(code => {
             if (groups.has(code)) {
                 orderedGroups.set(code, groups.get(code)!);
                 groups.delete(code);
@@ -167,13 +167,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCar
                                                         return (ownedCounts.get(key) || 0) > 0;
                                                     }).length;
 
-                                                    const rarityColor = {
-                                                        'Common': 'bg-gray-400',
-                                                        'Uncommon': 'bg-green-500',
-                                                        'Rare': 'bg-blue-500',
-                                                        'Epic': 'bg-purple-500',
-                                                        'Showcase': 'bg-pink-500'
-                                                    }[rarity] || 'bg-gray-500';
+                                                    const rarityColor = RARITY_COLORS[rarity as keyof typeof RARITY_COLORS] || 'bg-gray-500';
 
                                                     return (
                                                         <div key={rarity} className="flex flex-col gap-1">

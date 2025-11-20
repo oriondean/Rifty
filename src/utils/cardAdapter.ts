@@ -1,7 +1,10 @@
 import type { Card, Rarity, Element, CardType } from '../data/Card';
 import originsData from '../assets/origins-set.json';
 
-interface RawCard {
+/**
+ * Raw card data structure from JSON import
+ */
+export interface RawCardData {
     id: string;
     name: string;
     text: string;
@@ -16,7 +19,12 @@ interface RawCard {
     setName: string;
 }
 
-export const adaptCard = (raw: RawCard): Card => {
+/**
+ * Adapts raw JSON card data to the application's Card type
+ * @param raw - Raw card data from JSON
+ * @returns Transformed Card object
+ */
+export const adaptCard = (raw: RawCardData): Card => {
     // Helper to map rarity string to Rarity type
     const mapRarity = (r: string): Rarity => {
         return r as Rarity;
@@ -58,15 +66,30 @@ export const adaptCard = (raw: RawCard): Card => {
     };
 };
 
+/**
+ * Gets all cards from the imported JSON data
+ * @returns Array of all Card objects
+ */
 export const getAllCards = (): Card[] => {
-    return (originsData as any[]).map(adaptCard);
+    return (originsData as unknown as RawCardData[]).map(adaptCard);
 };
 
+/**
+ * Gets all cards with a specific collector number
+ * @param number - The collector number to filter by
+ * @returns Array of matching Card objects
+ */
 export const getCardsByNumber = (number: number): Card[] => {
     const allCards = getAllCards();
     return allCards.filter(card => card.collectorNumber === number);
 };
 
+/**
+ * Gets cards by collector number and alternate status
+ * @param number - The collector number to filter by
+ * @param isAlternate - Whether to get alternate or standard versions
+ * @returns Array of matching Card objects
+ */
 export const getCardsByNumberAndType = (number: number, isAlternate: boolean): Card[] => {
     const allCards = getAllCards();
     return allCards.filter(card => {

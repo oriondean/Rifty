@@ -3,6 +3,7 @@ import type { Card } from '../data/Card';
 import { Plus, Minus } from 'lucide-react';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { RARITY_COLORS } from '../constants';
 
 interface CompactCardProps {
     card: Card;
@@ -17,19 +18,8 @@ export const CompactCard: React.FC<CompactCardProps> = ({ card, ownedCount, onAd
     const containerRef = useRef<HTMLDivElement>(null);
     const isOwned = ownedCount > 0;
 
-    // Get rarity color
-    const getRarityColor = (rarity: string) => {
-        switch (rarity) {
-            case 'Common': return 'bg-gray-400';
-            case 'Uncommon': return 'bg-green-500';
-            case 'Rare': return 'bg-blue-500';
-            case 'Epic': return 'bg-purple-500';
-            case 'Legendary': return 'bg-yellow-500';
-            case 'Mythic': return 'bg-pink-500';
-            case 'Showcase': return 'bg-gradient-to-r from-purple-500 to-pink-500';
-            default: return 'bg-gray-500';
-        }
-    };
+    // Get rarity color from constants
+    const rarityColor = RARITY_COLORS[card.rarity] || 'bg-gray-500';
 
     const handleMouseEnter = () => {
         if (containerRef.current) {
@@ -92,7 +82,7 @@ export const CompactCard: React.FC<CompactCardProps> = ({ card, ownedCount, onAd
                     <span className={cn("text-xs font-bold", isOwned ? 'text-primary' : 'text-muted-foreground')}>
                         #{card.collectorNumber}
                     </span>
-                    <div className={`w-2 h-2 rounded-full ${getRarityColor(card.rarity)} flex-shrink-0`} title={card.rarity}></div>
+                    <div className={`w-2 h-2 rounded-full ${rarityColor} flex-shrink-0`} title={card.rarity}></div>
                 </div>
 
                 <span className="text-[10px] leading-tight font-medium line-clamp-3 z-10">
