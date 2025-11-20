@@ -84,7 +84,7 @@ export const CardSearchModal: React.FC<CardSearchModalProps> = ({ isOpen, onClos
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-rift-800">
                     <h2 className="text-2xl font-bold text-white">Add Cards</h2>
-                    <button onClick={onClose} className="text-rift-400 hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-rift-400 hover:text-white transition-colors cursor-pointer">
                         <X size={24} />
                     </button>
                 </div>
@@ -93,14 +93,14 @@ export const CardSearchModal: React.FC<CardSearchModalProps> = ({ isOpen, onClos
                 <div className="flex border-b border-rift-800">
                     <button
                         onClick={() => setActiveTab('search')}
-                        className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === 'search' ? 'bg-rift-800 text-white border-b-2 border-rift-500' : 'text-rift-400 hover:text-rift-200'
+                        className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-colors cursor-pointer ${activeTab === 'search' ? 'bg-rift-800 text-white border-b-2 border-rift-500' : 'text-rift-400 hover:text-rift-200'
                             }`}
                     >
                         Search
                     </button>
                     <button
                         onClick={() => setActiveTab('bulk')}
-                        className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === 'bulk' ? 'bg-rift-800 text-white border-b-2 border-rift-500' : 'text-rift-400 hover:text-rift-200'
+                        className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-colors cursor-pointer ${activeTab === 'bulk' ? 'bg-rift-800 text-white border-b-2 border-rift-500' : 'text-rift-400 hover:text-rift-200'
                             }`}
                     >
                         Bulk Add
@@ -188,7 +188,7 @@ export const CardSearchModal: React.FC<CardSearchModalProps> = ({ isOpen, onClos
 
                             <button
                                 onClick={handleBulkAdd}
-                                className="w-full py-3 bg-rift-500 hover:bg-rift-400 text-white rounded-xl font-bold transition-colors shadow-lg shadow-rift-500/20 flex items-center justify-center gap-2"
+                                className="w-full py-3 bg-rift-500 hover:bg-rift-400 text-white rounded-xl font-bold transition-colors shadow-lg shadow-rift-500/20 flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <Plus size={20} />
                                 Add Cards

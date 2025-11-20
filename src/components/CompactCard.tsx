@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import type { Card } from '../data/Card';
 import { Plus, Minus } from 'lucide-react';
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 interface CompactCardProps {
     card: Card;
@@ -79,20 +81,18 @@ export const CompactCard: React.FC<CompactCardProps> = ({ card, ownedCount, onAd
                 tabIndex={0}
                 aria-label={`${card.name} - ${isOwned ? `Owned x${ownedCount}` : 'Not owned'}`}
                 onKeyDown={handleKeyDown}
-                className={`
-                    w-24 h-32 rounded-lg border-2 transition-all duration-300 flex flex-col items-center justify-between p-2 text-center relative overflow-hidden
-                    hover:scale-105 hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-rift-300
-                    ${isOwned
-                        ? 'bg-rift-800 border-rift-500 text-white shadow-lg shadow-rift-500/20 hover:shadow-xl hover:shadow-rift-500/40 hover:border-rift-400'
-                        : 'bg-rift-950 border-rift-800 text-rift-600 hover:border-rift-700 hover:bg-rift-900'
-                    }
-                `}
+                className={cn(
+                    "w-24 h-32 rounded-lg border-2 flex flex-col items-center justify-between p-2 text-center relative overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring",
+                    isOwned
+                        ? 'bg-primary/10 border-primary text-foreground shadow-lg shadow-primary/20'
+                        : 'bg-card border-border text-muted-foreground'
+                )}
             >
                 <div className="flex items-center gap-1 w-full justify-between px-1">
-                    <span className={`text-xs font-bold ${isOwned ? 'text-white' : 'text-rift-600'}`}>
+                    <span className={cn("text-xs font-bold", isOwned ? 'text-primary' : 'text-muted-foreground')}>
                         #{card.collectorNumber}
                     </span>
-                    <div className={`w-2 h-2 rounded-full ${getRarityColor(card.rarity)} flex-shrink-0 transition-all duration-300 group-hover:scale-125 group-hover:shadow-lg`} title={card.rarity}></div>
+                    <div className={`w-2 h-2 rounded-full ${getRarityColor(card.rarity)} flex-shrink-0`} title={card.rarity}></div>
                 </div>
 
                 <span className="text-[10px] leading-tight font-medium line-clamp-3 z-10">
@@ -100,46 +100,49 @@ export const CompactCard: React.FC<CompactCardProps> = ({ card, ownedCount, onAd
                 </span>
 
                 {/* Count Indicator */}
-                <div className={`text-xs font-bold mt-1 ${isOwned ? 'text-white' : 'text-rift-600'}`}>
+                <div className={cn("text-xs font-bold mt-1", isOwned ? 'text-primary' : 'text-muted-foreground')}>
                     x{ownedCount}
                 </div>
 
                 {/* Management Buttons (Visible on Hover or Focus) */}
-                <div className="absolute inset-0 bg-rift-900/90 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 z-20 pointer-events-none">
-                    <button
+                <div className="absolute inset-0 bg-background/90 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 flex flex-col items-center justify-center gap-2 z-20 pointer-events-none">
+                    <Button
                         onClick={(e) => { e.stopPropagation(); onAdd(); }}
-                        className="p-1 bg-green-600 hover:bg-green-500 text-white rounded-full shadow-lg transform hover:scale-110 transition-all pointer-events-auto focus:outline-none focus:ring-2 focus:ring-green-400"
-                        aria-label={`Add ${card.name}`}
+                        size="icon"
+                        className="h-8 w-8 rounded-full pointer-events-auto"
+                        variant="default"
                     >
                         <Plus size={16} />
-                    </button>
-                    <span className="text-white font-bold text-lg" aria-hidden="true">{ownedCount}</span>
-                    <button
+                    </Button>
+                    <span className="font-bold text-lg" aria-hidden="true">{ownedCount}</span>
+                    <Button
                         onClick={(e) => { e.stopPropagation(); onRemove(); }}
-                        className="p-1 bg-red-600 hover:bg-red-500 text-white rounded-full shadow-lg transform hover:scale-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed pointer-events-auto focus:outline-none focus:ring-2 focus:ring-red-400"
+                        size="icon"
+                        className="h-8 w-8 rounded-full pointer-events-auto"
+                        variant="destructive"
                         disabled={ownedCount === 0}
-                        aria-label={`Remove ${card.name}`}
                     >
                         <Minus size={16} />
-                    </button>
+                    </Button>
                 </div>
 
                 {isOwned && (
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-rift-500/30">
-                        <div className="h-full bg-rift-400 w-full" />
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-primary/30">
+                        <div className="h-full bg-primary w-full" />
                     </div>
                 )}
             </div>
 
             {/* Hover Preview (Image Only) */}
             {showPreview && (
-                <div className={`absolute z-50 pointer-events-none
-                    ${position.top ? 'bottom-full mb-2' : 'top-full mt-2'}
-                    ${position.align === 'center' ? 'left-1/2 -translate-x-1/2' : ''}
-                    ${position.align === 'left' ? 'left-0' : ''}
-                    ${position.align === 'right' ? 'right-0' : ''}
-                `}>
-                    <div className="relative drop-shadow-2xl rounded-xl overflow-hidden border-2 border-rift-600 bg-rift-900">
+                <div className={cn(
+                    "absolute z-50 pointer-events-none",
+                    position.top ? 'bottom-full mb-2' : 'top-full mt-2',
+                    position.align === 'center' ? 'left-1/2 -translate-x-1/2' : '',
+                    position.align === 'left' ? 'left-0' : '',
+                    position.align === 'right' ? 'right-0' : ''
+                )}>
+                    <div className="relative drop-shadow-2xl rounded-xl overflow-hidden border-2 border-border bg-card">
                         <img
                             src={card.image}
                             alt={card.name}

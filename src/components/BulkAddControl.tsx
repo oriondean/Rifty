@@ -4,6 +4,13 @@ import { Textarea } from './ui/textarea';
 import { Plus } from 'lucide-react';
 import { getCardsByNumberAndType } from '../utils/cardAdapter';
 import type { Card } from '../data/Card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 interface BulkAddControlProps {
     onAddBulk: (cards: Card[]) => void;
@@ -13,11 +20,13 @@ export const BulkAddControl: React.FC<BulkAddControlProps> = ({ onAddBulk }) => 
     const [bulkInput, setBulkInput] = useState('');
     const [selectedSet, setSelectedSet] = useState('OGN');
     const [status, setStatus] = useState('');
+    const [showError, setShowError] = useState(false);
 
     const handleBulkAdd = () => {
         const inputs = bulkInput.split(/\s+/).filter(s => s.trim());
         if (inputs.length === 0) {
-            setStatus('No numbers');
+            setShowError(true);
+            setTimeout(() => setShowError(false), 3000);
             return;
         }
 
@@ -53,36 +62,49 @@ export const BulkAddControl: React.FC<BulkAddControlProps> = ({ onAddBulk }) => 
         }
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setBulkInput(e.target.value);
+        if (showError) {
+            setShowError(false);
+        }
+    };
+
     return (
         <div className="flex items-start gap-2">
             <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2 bg-rift-900 rounded-lg p-1 border border-rift-600 h-9">
-                    <select
-                        value={selectedSet}
-                        onChange={(e) => setSelectedSet(e.target.value)}
-                        className="bg-transparent text-sm border-none focus:ring-0 cursor-pointer text-rift-100"
-                        aria-label="Select Set"
-                    >
-                        <option value="OGN" className="bg-rift-900 text-rift-100">OGN</option>
-                        <option value="PG" className="bg-rift-900 text-rift-100">PG</option>
-                    </select>
-                </div>
+                <Select value={selectedSet} onValueChange={setSelectedSet}>
+                    <SelectTrigger className="w-[80px] h-9">
+                        <SelectValue placeholder="Set" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="OGN">OGN</SelectItem>
+                        <SelectItem value="PG">PG</SelectItem>
+                    </SelectContent>
+                </Select>
                 {status && <span className="text-xs text-green-400 font-medium px-1" role="status">{status}</span>}
             </div>
 
-            <Textarea
-                placeholder="1 5 12 7a..."
-                value={bulkInput}
-                onChange={(e) => setBulkInput(e.target.value)}
-                className="min-h-[36px] h-9 w-48 resize-none overflow-hidden bg-rift-950 border-rift-700 font-mono text-xs flex items-center"
-                aria-label="Bulk add cards by collector number"
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleBulkAdd();
-                    }
-                }}
-            />
+            <div className="relative">
+                <Textarea
+                    placeholder="1 5 12 7a..."
+                    value={bulkInput}
+                    onChange={handleInputChange}
+                    className={`min-h-[36px] h-9 w-48 resize-none overflow-hidden font-mono text-xs flex items-center ${showError ? 'border-red-500 border-2 focus-visible:ring-red-500' : ''}`}
+                    aria-label="Bulk add cards by collector number"
+                    aria-invalid={showError}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleBulkAdd();
+                        }
+                    }}
+                />
+                {showError && (
+                    <div className="absolute top-full mt-1 left-0 bg-red-500 text-white text-xs px-2 py-1 rounded shadow-lg whitespace-nowrap z-50">
+                        Please enter card numbers in the format "1 5 12 7a..."
+                    </div>
+                )}
+            </div>
             <Button onClick={handleBulkAdd} size="sm" className="h-9 px-3">
                 <Plus className="h-4 w-4" />
             </Button>

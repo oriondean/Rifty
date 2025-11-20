@@ -27,33 +27,24 @@ export const RiftLogo: React.FC<RiftLogoProps> = ({ size = 32, className = '' })
                 </linearGradient>
             </defs>
 
-            {/* Central Rift Shard - Pulsing Core */}
+            {/* Central Rift Shard */}
             <path
                 d="M50 10 L65 40 L50 90 L35 40 Z"
                 fill="url(#riftGradient)"
                 filter="url(#glow)"
-                className="animate-pulse origin-center"
-            >
-                <animate
-                    attributeName="opacity"
-                    values="0.8;1;0.8"
-                    dur="2s"
-                    repeatCount="indefinite"
-                />
-            </path>
+                className="origin-center"
+            />
 
-            {/* Floating Fragments - Orbiting/Floating effect */}
+            {/* Floating Fragments */}
             <path
                 d="M70 30 L80 45 L75 55 L65 40 Z"
                 fill="currentColor"
-                className="opacity-80 animate-pulse"
-                style={{ animationDelay: '0.5s' }}
+                className="opacity-80"
             />
             <path
                 d="M30 30 L20 45 L25 55 L35 40 Z"
                 fill="currentColor"
-                className="opacity-80 animate-pulse"
-                style={{ animationDelay: '1s' }}
+                className="opacity-80"
             />
 
             {/* Energy Arcs */}
