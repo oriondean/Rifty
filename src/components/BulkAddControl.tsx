@@ -61,13 +61,13 @@ export const BulkAddControl: React.FC<BulkAddControlProps> = ({ onAddBulk }) => 
                         value={selectedSet}
                         onChange={(e) => setSelectedSet(e.target.value)}
                         className="bg-transparent text-sm border-none focus:ring-0 cursor-pointer text-rift-100"
+                        aria-label="Select Set"
                     >
                         <option value="OGN" className="bg-rift-900 text-rift-100">OGN</option>
                         <option value="PG" className="bg-rift-900 text-rift-100">PG</option>
-                        <option value="SFD" className="bg-rift-900 text-rift-100">SFD</option>
                     </select>
                 </div>
-                {status && <span className="text-xs text-green-400 font-medium px-1">{status}</span>}
+                {status && <span className="text-xs text-green-400 font-medium px-1" role="status">{status}</span>}
             </div>
 
             <Textarea
@@ -75,6 +75,7 @@ export const BulkAddControl: React.FC<BulkAddControlProps> = ({ onAddBulk }) => 
                 value={bulkInput}
                 onChange={(e) => setBulkInput(e.target.value)}
                 className="min-h-[36px] h-9 w-48 resize-none overflow-hidden bg-rift-950 border-rift-700 font-mono text-xs flex items-center"
+                aria-label="Bulk add cards by collector number"
                 onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();

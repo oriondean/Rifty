@@ -26,14 +26,15 @@ export default {
         },
         // Keep old rift colors for gradual migration
         rift: {
+          950: '#050508', // Added for deep background
           900: '#0a0a12',
           800: '#151520',
           700: '#2a2a35',
-          600: '#3f3f4e',
-          500: '#6366f1',
-          400: '#818cf8',
-          300: '#a5b4fc',
-          100: '#e0e7ff',
+          600: '#94A3B8', // Slate-400 for muted text
+          500: '#06B6D4', // Cyan-500
+          400: '#22D3EE', // Cyan-400 (Replaces #818cf8)
+          300: '#67E8F9', // Cyan-300
+          100: '#CCFBF1', // Teal-100 for very light text
         },
       },
       fontFamily: {

@@ -2,7 +2,7 @@ import { useCollection } from './hooks/useCollection';
 import { CardGrid } from './components/CardGrid';
 import { Filters } from './components/Filters';
 import { BulkAddControl } from './components/BulkAddControl';
-import { Zap } from 'lucide-react';
+import { RiftLogo } from './components/RiftLogo';
 
 function App() {
   const { allUserCards, filters, updateFilter, addCard, addCards, removeCard } = useCollection();
@@ -16,7 +16,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-6 py-8 relative z-10 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-lol-850 border-2 border-lol-300 shadow-lg shadow-lol-300/20 clip-corners">
-              <Zap className="text-hextech-cyan" size={32} strokeWidth={2.5} />
+              <RiftLogo size={32} className="text-hextech-cyan" />
             </div>
             <div>
               <h1 className="text-4xl font-fantasy font-bold text-transparent bg-clip-text bg-gradient-to-r from-lol-300 via-lol-200 to-lol-300 tracking-wider drop-shadow-[0_0_10px_rgba(200,155,60,0.5)]">

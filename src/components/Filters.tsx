@@ -26,6 +26,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => 
                         value={filters.search}
                         onChange={(e) => onFilterChange('search', e.target.value)}
                         className="w-full bg-rift-900 border border-rift-600 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-rift-400 focus:ring-2 focus:ring-rift-400/50 transition-all duration-200 hover:border-rift-500 focus:shadow-lg focus:shadow-rift-400/20"
+                        aria-label="Search cards"
                     />
                 </div>
 
@@ -37,6 +38,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => 
                             value={filters.rarity}
                             onChange={(e) => onFilterChange('rarity', e.target.value)}
                             className="bg-transparent text-sm border-none focus:ring-0 cursor-pointer text-rift-100"
+                            aria-label="Filter by Rarity"
                         >
                             {rarities.map((r) => <option key={r} value={r} className="bg-rift-900 text-rift-100">{r} Rarity</option>)}
                         </select>
@@ -47,6 +49,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => 
                             value={filters.element}
                             onChange={(e) => onFilterChange('element', e.target.value)}
                             className="bg-transparent text-sm border-none focus:ring-0 cursor-pointer text-rift-100"
+                            aria-label="Filter by Element"
                         >
                             {elements.map((e) => <option key={e} value={e} className="bg-rift-900 text-rift-100">{e} Element</option>)}
                         </select>
@@ -57,6 +60,7 @@ export const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => 
                             value={filters.type}
                             onChange={(e) => onFilterChange('type', e.target.value)}
                             className="bg-transparent text-sm border-none focus:ring-0 cursor-pointer text-rift-100"
+                            aria-label="Filter by Type"
                         >
                             {types.map((t) => <option key={t} value={t} className="bg-rift-900 text-rift-100">{t} Type</option>)}
                         </select>

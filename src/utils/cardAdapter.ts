@@ -54,6 +54,7 @@ export const adaptCard = (raw: RawCard): Card => {
         collectorNumber: raw.collectorNumber,
         set: raw.set,
         setName: raw.setName,
+        isAlternate: !!isAlternate,
     };
 };
 
@@ -70,7 +71,6 @@ export const getCardsByNumberAndType = (number: number, isAlternate: boolean): C
     const allCards = getAllCards();
     return allCards.filter(card => {
         if (card.collectorNumber !== number) return false;
-        const cardIsAlternate = card.id.match(/-\d+a-/);
-        return isAlternate ? !!cardIsAlternate : !cardIsAlternate;
+        return card.isAlternate === isAlternate;
     });
 };

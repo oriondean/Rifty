@@ -17,6 +17,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCar
     // Filter all cards based on current filters
     const filteredAllCards = useMemo(() => {
         return allCards.filter((card) => {
+            if (card.set === 'SFD') return false;
             const matchesSearch = card.name.toLowerCase().includes(filters.search.toLowerCase()) ||
                 card.description.toLowerCase().includes(filters.search.toLowerCase());
             const matchesRarity = filters.rarity === 'All' || card.rarity === filters.rarity;
@@ -75,8 +76,8 @@ export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCar
     const ownedCounts = useMemo(() => {
         const counts = new Map<string, number>();
         userCards.forEach(card => {
-            // Key by set + collector number to be unique across sets
-            const key = `${card.set}-${card.collectorNumber}`;
+            // Key by set + collector number + alternate status to be unique
+            const key = `${card.set}-${card.collectorNumber}-${card.isAlternate ? 'a' : 'n'}`;
             counts.set(key, (counts.get(key) || 0) + 1);
         });
         return counts;
@@ -84,10 +85,11 @@ export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCar
 
     const handleRemoveOne = (card: CardType) => {
         // Find the last instance of this card in the user's collection
-        // We need to match by set and collector number (or name/id if unique in source)
-        // Since userCards have unique IDs, we need to find one that matches the source card's data
+        // We need to match by set, collector number, and alternate status
         const instanceToRemove = userCards.find(c =>
-            c.set === card.set && c.collectorNumber === card.collectorNumber
+            c.set === card.set &&
+            c.collectorNumber === card.collectorNumber &&
+            c.isAlternate === card.isAlternate
         );
 
         if (instanceToRemove) {
@@ -107,13 +109,14 @@ export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCar
                         // Calculate set statistics
                         const totalCardsInSet = group.cards.length;
                         const uniqueOwned = group.cards.filter(card => {
-                            const key = `${card.set}-${card.collectorNumber}`;
+                            const key = `${card.set}-${card.collectorNumber}-${card.isAlternate ? 'a' : 'n'}`;
                             return (ownedCounts.get(key) || 0) > 0;
                         }).length;
-                        const duplicatesCount = group.cards.filter(card => {
-                            const key = `${card.set}-${card.collectorNumber}`;
-                            return (ownedCounts.get(key) || 0) > 1;
-                        }).length;
+                        const duplicatesCount = group.cards.reduce((acc, card) => {
+                            const key = `${card.set}-${card.collectorNumber}-${card.isAlternate ? 'a' : 'n'}`;
+                            const count = ownedCounts.get(key) || 0;
+                            return acc + (count > 1 ? count - 1 : 0);
+                        }, 0);
                         const completionPercentage = totalCardsInSet > 0 ? Math.round((uniqueOwned / totalCardsInSet) * 100) : 0;
 
                         return (
@@ -121,22 +124,78 @@ export const CardGrid: React.FC<CardGridProps> = ({ userCards, filters, onAddCar
                                 <div className="flex items-baseline gap-4 border-b border-rift-800 pb-2">
                                     <h2 className="text-2xl font-fantasy font-bold text-rift-100">{group.name}</h2>
                                     <span className="text-rift-500 font-mono text-sm uppercase tracking-wider">{setCode}</span>
-                                    <div className="flex items-center gap-3 ml-auto text-sm">
-                                        <span className="text-rift-400">
-                                            Owned: <span className="text-rift-100 font-bold">{uniqueOwned}/{totalCardsInSet}</span>
-                                        </span>
-                                        <span className="text-rift-400">
-                                            With Duplicates: <span className="text-rift-100 font-bold">{duplicatesCount}</span>
-                                        </span>
-                                        <span className="text-rift-400">
-                                            Completion: <span className={`font-bold ${completionPercentage === 100 ? 'text-green-400' : 'text-rift-100'}`}>{completionPercentage}%</span>
-                                        </span>
+                                </div>
+
+                                {/* Statistics Panel */}
+                                <div className="w-full bg-rift-900/50 rounded-lg p-4 border border-rift-800">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        {/* Overall Progress */}
+                                        <div className="flex flex-col gap-1">
+                                            <span className="text-xs text-rift-400 uppercase tracking-wider font-bold">Set Progress</span>
+                                            <div className="flex items-baseline gap-2">
+                                                <span className={`text-2xl font-bold ${completionPercentage === 100 ? 'text-hextech-cyan' : 'text-rift-100'}`}>
+                                                    {completionPercentage}%
+                                                </span>
+                                                <span className="text-sm text-rift-500">
+                                                    ({uniqueOwned}/{totalCardsInSet})
+                                                </span>
+                                            </div>
+                                            <div className="w-full h-1.5 bg-rift-800 rounded-full overflow-hidden mt-1">
+                                                <div
+                                                    className="h-full bg-hextech-cyan transition-all duration-500"
+                                                    style={{ width: `${completionPercentage}%` }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Duplicates */}
+                                        <div className="flex flex-col gap-1">
+                                            <span className="text-xs text-rift-400 uppercase tracking-wider font-bold">Duplicates</span>
+                                            <div className="flex items-baseline gap-2">
+                                                <span className="text-2xl font-bold text-rift-100">{duplicatesCount}</span>
+                                                <span className="text-sm text-rift-500">extra cards</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Rarity Breakdown */}
+                                        <div className="col-span-2 grid grid-cols-3 sm:grid-cols-5 gap-2">
+                                            {['Common', 'Uncommon', 'Rare', 'Epic', 'Showcase'].map(rarity => {
+                                                const rarityCards = group.cards.filter(c => c.rarity === rarity);
+                                                const totalRarity = rarityCards.length;
+                                                if (totalRarity === 0) return null;
+
+                                                const ownedRarity = rarityCards.filter(c => {
+                                                    const key = `${c.set}-${c.collectorNumber}-${c.isAlternate ? 'a' : 'n'}`;
+                                                    return (ownedCounts.get(key) || 0) > 0;
+                                                }).length;
+
+                                                const rarityColor = {
+                                                    'Common': 'bg-gray-400',
+                                                    'Uncommon': 'bg-green-500',
+                                                    'Rare': 'bg-blue-500',
+                                                    'Epic': 'bg-purple-500',
+                                                    'Showcase': 'bg-pink-500'
+                                                }[rarity] || 'bg-gray-500';
+
+                                                return (
+                                                    <div key={rarity} className="flex flex-col gap-1">
+                                                        <div className="flex items-center gap-1">
+                                                            <div className={`w-1.5 h-1.5 rounded-full ${rarityColor}`} />
+                                                            <span className="text-[10px] text-rift-400 uppercase">{rarity}</span>
+                                                        </div>
+                                                        <span className="text-sm font-mono text-rift-200">
+                                                            {ownedRarity}/{totalRarity}
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-wrap gap-2 justify-center">
                                     {group.cards.map(card => {
-                                        const key = `${card.set}-${card.collectorNumber}`;
+                                        const key = `${card.set}-${card.collectorNumber}-${card.isAlternate ? 'a' : 'n'}`;
                                         const count = ownedCounts.get(key) || 0;
 
                                         return (

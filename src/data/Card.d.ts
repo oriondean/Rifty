@@ -15,4 +15,5 @@ export interface Card {
     collectorNumber: number;
     set: string;
     setName: string;
+    isAlternate: boolean;
 }
